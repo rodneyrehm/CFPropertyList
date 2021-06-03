@@ -68,7 +68,13 @@ class CFNumber extends CFType
             $this->value = intval($this->value);
             $ret = 'integer';
         }
-        return parent::toXML($doc, $ret);
+        $formatter = new \NumberFormatter('en_US', \NumberFormatter::DECIMAL);
+        $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 10);
+        $formatter->setAttribute(\NumberFormatter::GROUPING_USED, false);
+        $text = $doc->createTextNode($formatter->format($this->value));
+        $node = $doc->createElement($ret);
+        $node->appendChild($text);
+        return $node;
     }
 
   /**
